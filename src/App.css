@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Coming+Soon&family=Montserrat&display=swap");
+
+body{
+  background-color: #EAE6E3;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.page-wrapper{
+  margin-left: 5rem;
+  margin-right: 5rem;
+  margin-top: 1rem;
+}
+
+h1, h2, h3{
+  font-family: 'Coming Soon';
+}
+
+nav{
+  background-color: #B8B2B5;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 3px;
+}
+
+.navbar-link{
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 3rem;
+  text-decoration: none;
+  color: #36393C
+}
+
+.navbar-link:hover{
+  color: black
+}
+
+.bi{
+  margin-right: 0.5rem;
+}
