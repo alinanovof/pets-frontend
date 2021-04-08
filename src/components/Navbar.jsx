@@ -6,7 +6,7 @@ const Navbar = () => {
       <NavLink
         exact
         className="navbar-link"
-        activeStyle={{ color: "black", fontWeight: "bold"  }}
+        activeStyle={{  fontWeight: "bold"  }}
         to="/"
       >
         <i className="bi bi-house-door"></i>
@@ -14,7 +14,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         className="navbar-link"
-        activeStyle={{ color: "black", fontWeight: "bold"  }}
+        activeStyle={{ fontWeight: "bold"  }}
         to="/profile"
       >
         <i className="bi bi-person"></i>
@@ -22,7 +22,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         className="navbar-link"
-        activeStyle={{ color: "black", fontWeight: "bold" }}
+        activeStyle={{ fontWeight: "bold" }}
         to="/my-pets"
       >
           <i className="bi bi-heart"></i>
@@ -30,7 +30,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         className="navbar-link"
-        activeStyle={{ color: "black", fontWeight: "bold" }}
+        activeStyle={{ fontWeight: "bold" }}
         to="/search"
       >
         <i className="bi bi-search"></i>

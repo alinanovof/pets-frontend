@@ -1,8 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Coming+Soon&family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda&family=Poppins&display=swap");
 
 body{
-  background-color: #EAE6E3;
-  font-family: 'Montserrat', sans-serif;
+  background-color: #e8ece8;
+  font-family: 'Poppins', sans-serif;
+  color: #1e1e1e;
 }
 
 .page-wrapper{
@@ -12,11 +13,14 @@ body{
 }
 
 h1, h2, h3{
-  font-family: 'Coming Soon';
+  font-family: 'Bodoni Moda', serif;
+  text-align: center;
+  margin-top: 2rem;
+  font-weight: bold;
 }
 
 nav{
-  background-color: #B8B2B5;
+  background-color: #aa7446;
   width: 80%;
   margin-left: auto;
   margin-right: auto;
@@ -28,13 +32,48 @@ nav{
   margin-bottom: 0.5rem;
   margin-left: 3rem;
   text-decoration: none;
-  color: #36393C
+  color: #eecf8b
 }
 
 .navbar-link:hover{
-  color: black
+  color: whitesmoke
 }
 
 .bi{
   margin-right: 0.5rem;
+}
+
+.btn, .btn:focus{
+  border-radius: 10px;
+  background-color: #383B3C;
+  border: none;
+}
+
+.btn:hover{
+  background-color: #cdd0da;
+  color: #383B3C;
+}
+
+.profile-form, .profile-form:focus{
+  width: 80%;
+  margin: 3rem;
+  margin-top: 1rem;
+}
+
+.form-control{
+  background: white;
+  border: none;
+}
+
+.sr-only{
+  display: none;
+}
+
+button.close{
+  border: none;
+  background-color: transparent;
+}
+
+.modal-content{
+  background-color: #e8ece8;
 }
