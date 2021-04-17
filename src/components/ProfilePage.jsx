@@ -1,52 +1,95 @@
+import { useFormik } from "formik";
+
 const ProfilePage = () => {
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      fname: "",
+      lname: "",
+      tel: "",
+      bio: ""
+    },
+    onSubmit: values => {
+      console.log(JSON.stringify(values, null, 2));
+    },
+  });
   return (
     <div className="page-wrapper">
       <h2>Profile</h2>
-      <form className="profile-form">
-        
-        <div className="mb-3 ">
-          <label htmlFor="exampleInputEmail1" className="form-label">
+      <form className="profile-form" onSubmit={formik.handleSubmit}>
+        <div className="profile-flex-child mb-3 ">
+          <label htmlFor="email" className="form-label">
             Email address
           </label>
           <input
             type="email"
             className="form-control"
-            id="exampleInputEmail1"
+            id="email"
             aria-describedby="emailHelp"
+            onChange={formik.handleChange}
+            value={formik.values.email}
           />
-          <div id="emailHelp" className="form-text">
-            We'll never share your email with anyone else.
-          </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
+        <div className="mb-3 profile-flex-child">
+          <label
+            htmlFor="password"
+            className="form-label"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+          >
             Password
           </label>
+          <input type="password" className="form-control" id="password" />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="fname" className="form-label">
+            First Name
+          </label>
           <input
-            type="password"
+            type="first-name"
             className="form-control"
-            id="exampleInputPassword1"
+            id="fname"
+            onChange={formik.handleChange}
+            value={formik.values.fname}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="first-name" className="form-label">
-            First Name
-          </label>
-          <input type="fname" className="form-control" id="first-name" />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="last-name" className="form-label">
+          <label htmlFor="lname" className="form-label">
             Last Name
           </label>
-          <input type="lname" className="form-control" id="last-name" />
+          <input
+            type="last-name"
+            className="form-control"
+            id="lname"
+            onChange={formik.handleChange}
+            value={formik.values.lname}
+          />
         </div>
         <div className="mb-3">
           <label htmlFor="tel" className="form-label">
             Phone Number
           </label>
-          <input type="tel" className="form-control" id="tel" />
+          <input
+            type="tel"
+            className="form-control"
+            id="tel"
+            onChange={formik.handleChange}
+            value={formik.values.tel}
+          />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <label htmlFor="bio" className="form-label">
+          Bio
+        </label>
+        <textarea
+          type="text"
+          className="form-control"
+          id="bio"
+          placeholder="A few words about yourself..."
+          onChange={formik.handleChange}
+          value={formik.values.bio}
+        />
+        <button type="submit" className="btn mt-4 btn-primary">
           Submit
         </button>
       </form>
