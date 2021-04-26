@@ -1,48 +1,52 @@
-import React, {createContext, useState, useContext, useEffect} from 'react';
-import * as auth from '../api/auth';
+import React, { createContext, useState, useContext, useEffect } from "react";
+import localforage from "localforage";
 
-export const AuthContext = createContext();
+export const AuthContext = createContext({
+  isInitiallyLoaded: false,
+  token: "",
+  saveToken: async (token) => {},
+  removeToken: async () => {},
+});
 
-export const useAuth = () =>{
-    return useContext(AuthContext)
-}
+const tokenKey = "userToken";
 
-const AuthContextProvider = (props) => {
-    const [user, setUser] = useState(null);
-    const[loading, setLoading] = useState(true);
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
 
-    const signup = (email, password, fname, lname, phone) => {
-        return auth.signup(email, password, fname, lname, phone)
-        .then((data) => {
-            setUser(data.user)
-        })
-        .catch((e) =>{
-            throw e;
-        })
-    }
-    
-    const login = (email, password) => {
-        return auth.login(email,password)
-        .then((data) =>{
-            setUser(data.user);
-        })
-        .catch((e) =>{
-            throw e;
-        })
-    }
-    
-    return(
-        <AuthContext.Provider
-        value={{
-            user,
-            loading,
-            signup,
-            login,
-            setUser
-        }}
-        >
-        </AuthContext.Provider>
-    )
-}
+const AuthProvider = (props) => {
+  const [isInitiallyLoaded, setIsInitiallyLoaded] = useState(false);
+  const [token, setToken] = useState();
+  const saveToken = async (token) => {
+    setToken(token);
+    await localforage.setItem(tokenKey, token);
+  };
+  const removeToken = async () => {
+    setToken();
+    await localforage.removeItem(tokenKey);
+  };
 
-export { AuthContextProvider }
+  useEffect(() => {
+    localforage.getItem(tokenKey).then(token => {
+      if (token) {
+        setToken(token);
+      }
+      setIsInitiallyLoaded(true);
+    });
+  }, []);
+ 
+  return (
+    <AuthContext.Provider
+      value={{
+        token,
+        isInitiallyLoaded,
+        saveToken,
+        removeToken,
+      }}
+    >
+      {props.children}
+    </AuthContext.Provider>
+  );
+};
+
+export default AuthProvider;

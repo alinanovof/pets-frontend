@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const auth = useAuth();
   return (
     <nav className="navbar navbar-expand-lg justify-content-center">
        <span className="navbar-brand mb-0 h1">My Best Friend</span>
@@ -15,7 +16,7 @@ const Navbar = () => {
         <i className="bi bi-house-door"></i>
         <span className="nav-text">Home</span>
       </NavLink>
-      {!loggedIn &&
+      {auth.token &&
       <NavLink
         className="navbar-link"
         activeStyle={{ fontWeight: "bold"  }}
@@ -25,7 +26,7 @@ const Navbar = () => {
         <span className="nav-text">Profile</span>
       </NavLink>
       }
-      {!loggedIn &&
+      {auth.token &&
       <NavLink
         className="navbar-link"
         activeStyle={{ fontWeight: "bold" }}

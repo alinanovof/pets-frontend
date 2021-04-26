@@ -98,8 +98,7 @@ const AdvancedSearch = (props) => {
                   name="weight-to"
                   id="weight-to"
                   placeholder="to"
-                />
-                
+                />                
               </div>
               kg
             </div>
@@ -107,7 +106,7 @@ const AdvancedSearch = (props) => {
 
           
 
-          <div class="row mb-3">
+          <div className="row mb-3">
             <label htmlFor="name-search" className="col-sm-1 col-form-label search-name">
               Name
             </label>

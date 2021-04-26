@@ -1,10 +1,10 @@
 import { Formik } from "formik";
 import { useFormik } from "formik";
-import React, { useState, useRef } from "react";
-
+import { getPets, createPet } from "../../api/api";
+import { useAuth } from '../../context/AuthContext'
 
 const AddPet = () => {
-  const [values, setValues] = useState();
+const auth = useAuth();
   const formik = useFormik({
     initialValues: {
       petName: "",
@@ -19,29 +19,32 @@ const AddPet = () => {
       diet: "",
       breed: "",
     },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      setValues(values)
+    onSubmit: async (values) => {
+      await addPetOnSubmit(values);
     },
   });
 
-  if(values){const newPet = {
-    pet_type: values.petType,
-    pet_name: values.petName,
-    adopt_status: values.adoptStatus,
-    image_link: values.photo,
-    pet_height: values.height,
-    pet_weight: values.weight,
-    color: values.color,
-    bio: values.bio,
-    hypoallerg: values.hypoall,
-    diet_restr: values.diet,
-    breed: values.breed
-  }
-  console.log(newPet)}
-  
- 
-  
+  const addPetOnSubmit = async (values) => {
+    const newPet = {
+      pet_type: values.petType,
+      pet_name: values.petName,
+      adopt_status: values.adoptStatus,
+      image_link: values.photo,
+      pet_height: values.height,
+      pet_weight: values.weight,
+      color: values.color,
+      bio: values.bio,
+      hypoallerg: values.hypoall,
+      diet_restr: values.diet,
+      breed: values.breed,
+    };
+    try {
+      await createPet(newPet, auth.token);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="page-wrapper">
       <h2>Add A Pet</h2>
@@ -105,7 +108,7 @@ const AddPet = () => {
           <option defaultValue value="">
             Select adoption status
           </option>
-          <option value="fostered">Fostered</option>
+          <option value="Fostered">Fostered</option>
           <option value="Adopted">Adopted</option>
         </select>
 
@@ -171,7 +174,7 @@ const AddPet = () => {
           placeholder="Write a short text about the pet's story"
         />
 
-        <div class="form-check mt-3">
+        <div className="form-check mt-3">
           <input
             className="form-check-input"
             type="checkbox"

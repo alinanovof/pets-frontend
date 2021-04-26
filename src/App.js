@@ -1,45 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from "react-router-dom";
-import './App.css';
-import HomePage from './components/HomePage'
-import ProfilePage from './components/ProfilePage';
- import MyPets from './components/MyPets';
-import Search from './components/Search/Search';
-import Navbar from './components/Navbar';
+import "./App.css";
+import HomePage from "./components/HomePage";
+import ProfilePage from "./components/ProfilePage";
+import MyPets from "./components/MyPets";
+import Search from "./components/Search/Search";
+import Navbar from "./components/Navbar";
 // import PetPage from './components/PetPage';
-import AddPet from './components/Admin/AddPet';
+import AddPet from "./components/Admin/AddPet";
+import AuthProvider, { useAuth } from "./context/AuthContext";
 
+function PrivateRoute({ children, ...rest }) {
+  let auth = useAuth();
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        auth.token ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  );
+}
 
-function App() {
-    
+const AppRouter = () => {
+  let auth = useAuth();
+  if(!auth.isInitiallyLoaded){
+      return <div></div>;
+  }
   return (
     <Router>
-            <Navbar />
-            <Switch>
-                <Route exact path="/">
-                    <HomePage />
-                </Route>
-                <Route path="/profile">
-                    <ProfilePage/>
-                </Route>
-                <Route path="/my-pets">
-                    <MyPets/>
-                </Route>
-                <Route path="/search">
-                    <Search/>
-                </Route>
-                <Route path="/admin/add-pet">
-                    <AddPet/>
-                </Route>
-                {/* <Route path="/my-pets/:id">
+      <Navbar />
+      <Switch>
+        <PrivateRoute path="/profile">
+          <ProfilePage />
+        </PrivateRoute>
+        <PrivateRoute path="/my-pets">
+          <MyPets />
+        </PrivateRoute>
+        <Route path="/search">
+          <Search />
+        </Route>
+        <Route path="/admin/add-pet">
+          <AddPet />
+        </Route>
+        {/* <Route path="/my-pets/:id">
                     <PetPage/>
                 </Route> */}
-            </Switch>
-        </Router>
+        <Route exact path="/">
+          <HomePage />
+        </Route>
+      </Switch>
+    </Router>
+  );
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppRouter />
+    </AuthProvider>
   );
 }
 

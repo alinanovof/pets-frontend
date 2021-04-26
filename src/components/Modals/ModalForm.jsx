@@ -12,11 +12,24 @@ const ModalForm = (props) => {
     },
     onSubmit: values => {
       props.hideModal()
-      console.log(JSON.stringify(values, null, 2));
+      addUserOnSubmit(values)
     },
   });
 
-
+  const addUserOnSubmit = async(values) =>{
+    const newUser = {
+      email: values.email,
+      password: values.password,
+      first_name: values.fname,
+      last_name: values.lname,
+      tel: values.tel
+    }
+    // try{
+    //   signup(newUser)
+    // } catch(err){
+    //   console.error(err)
+    // }
+  }
 
   return (
     <form className="signup-form " onSubmit={formik.handleSubmit}>
