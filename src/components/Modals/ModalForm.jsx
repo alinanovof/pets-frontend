@@ -1,7 +1,11 @@
 import { useFormik } from "formik";
 import { useAuth } from "../../context/AuthContext";
+import { signup } from "../../api/auth";
+import * as Yup from "yup";
+import { useState } from "react";
 
 const ModalForm = (props) => {
+  const [errorMsg, setErrorMsg] = useState("");
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -10,29 +14,32 @@ const ModalForm = (props) => {
       lname: "",
       tel: "",
     },
-    onSubmit: values => {
-      props.hideModal()
-      addUserOnSubmit(values)
+    onSubmit: async (values) => {
+      await addUserOnSubmit(values);
     },
   });
 
-  const addUserOnSubmit = async(values) =>{
-    const newUser = {
-      email: values.email,
-      password: values.password,
-      first_name: values.fname,
-      last_name: values.lname,
-      tel: values.tel
+  const addUserOnSubmit = async (values) => {
+    const email = values.email;
+    const password = values.password;
+    const first_name = values.fname;
+    const last_name = values.lname;
+    const tel = values.tel;
+    try {
+      await signup(email, password, first_name, last_name, tel);
+      props.hideModal();
+    } catch (err) {
+      setErrorMsg(err.name + ': ' + err.message);
     }
-    // try{
-    //   signup(newUser)
-    // } catch(err){
-    //   console.error(err)
-    // }
-  }
+  };
 
   return (
     <form className="signup-form " onSubmit={formik.handleSubmit}>
+      {errorMsg && (
+        <div className="alert alert-danger" role="alert">
+          {errorMsg}
+        </div>
+      )}
       <div className="profile-flex-child mb-3 ">
         <label htmlFor="email" className="form-label">
           Email address
@@ -44,6 +51,7 @@ const ModalForm = (props) => {
           aria-describedby="emailHelp"
           onChange={formik.handleChange}
           value={formik.values.email}
+          required
         />
         <div id="emailHelp" className="form-text">
           We'll never share your email with anyone else.
@@ -53,18 +61,28 @@ const ModalForm = (props) => {
         <label
           htmlFor="password"
           className="form-label"
-          onChange={formik.handleChange}
           value={formik.values.password}
         >
           Password
         </label>
-        <input type="password" className="form-control" id="password" />
+        <input
+          type="password"
+          className="form-control"
+          id="password"
+          onChange={formik.handleChange}
+          required
+        />
       </div>
       <div className="mb-3 profile-flex-child">
         <label htmlFor="password" className="form-label">
           Repeat Password
         </label>
-        <input type="password" className="form-control" id="confirm-password" onChange={formik.handleChange}/>
+        <input
+          type="password"
+          className="form-control"
+          id="confirm-password"
+          onChange={formik.handleChange}
+        />
       </div>
       <div className="mb-3">
         <label htmlFor="fname" className="form-label">
@@ -82,8 +100,13 @@ const ModalForm = (props) => {
         <label htmlFor="lname" className="form-label">
           Last Name
         </label>
-        <input type="last-name" className="form-control" id="lname" onChange={formik.handleChange}
-          value={formik.values.lname}/>
+        <input
+          type="last-name"
+          className="form-control"
+          id="lname"
+          onChange={formik.handleChange}
+          value={formik.values.lname}
+        />
       </div>
       <div className="mb-3">
         <label htmlFor="tel" className="form-label">

@@ -1,33 +1,39 @@
 import { useFormik } from "formik";
+import { useState } from "react";
 import { login } from "../../api/auth";
 import { useAuth } from '../../context/AuthContext'
 
 function LoginForm(props) {
   const auth = useAuth();
+  const [errorMsg, setErrorMsg] = useState("");
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     onSubmit: async (values) => {
-      props.hideModal();
       await submitLogin(values);
     },
   });
 
   const submitLogin = async (values) => {
-  
       const email = values.email;
       const password = values.password;
     try {
       const { token } = await login(email, password);
       await auth.saveToken(token)
+      props.hideModal();
     } catch (err) {
-      console.log(err.message);
+      setErrorMsg(err.message);
     }
   };
   return (
     <form className="signup-form" onSubmit={formik.handleSubmit}>
+       {errorMsg && (
+        <div className="alert alert-danger" role="alert">
+          {errorMsg}
+        </div>
+      )}
       <div className="profile-flex-child mb-3 ">
         <label htmlFor="email" className="form-label">
           Email

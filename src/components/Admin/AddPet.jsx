@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 
 const AddPet = () => {
 const auth = useAuth();
-  const formik = useFormik({
+const formik = useFormik({
     initialValues: {
       petName: "",
       petType: "",

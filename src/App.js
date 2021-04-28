@@ -11,9 +11,11 @@ import ProfilePage from "./components/ProfilePage";
 import MyPets from "./components/MyPets";
 import Search from "./components/Search/Search";
 import Navbar from "./components/Navbar";
-// import PetPage from './components/PetPage';
+import PetPage from "./components/PetPage";
 import AddPet from "./components/Admin/AddPet";
 import AuthProvider, { useAuth } from "./context/AuthContext";
+import AdminDash from "./components/Admin/AdminDash";
+import AllPets from "./components/Admin/AllPets";
 
 function PrivateRoute({ children, ...rest }) {
   let auth = useAuth();
@@ -38,8 +40,8 @@ function PrivateRoute({ children, ...rest }) {
 
 const AppRouter = () => {
   let auth = useAuth();
-  if(!auth.isInitiallyLoaded){
-      return <div></div>;
+  if (!auth.isInitiallyLoaded) {
+    return <div></div>;
   }
   return (
     <Router>
@@ -47,6 +49,9 @@ const AppRouter = () => {
       <Switch>
         <PrivateRoute path="/profile">
           <ProfilePage />
+        </PrivateRoute>
+        <PrivateRoute path="/my-pets/:petId">
+          <PetPage />
         </PrivateRoute>
         <PrivateRoute path="/my-pets">
           <MyPets />
@@ -57,9 +62,12 @@ const AppRouter = () => {
         <Route path="/admin/add-pet">
           <AddPet />
         </Route>
-        {/* <Route path="/my-pets/:id">
-                    <PetPage/>
-                </Route> */}
+        <Route path="/admin/all-pets">
+          <AllPets />
+        </Route>
+        <PrivateRoute path="/admin">
+          <AdminDash />
+        </PrivateRoute>
         <Route exact path="/">
           <HomePage />
         </Route>

@@ -3,29 +3,35 @@ import LoginModal from "./Modals/LoginModal";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
-import { getUser } from '../api/api'
+import { getUser } from "../api/api";
 
 const HomePage = (props) => {
   const auth = useAuth();
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [isOpenReg, setIsOpenReg] = useState(false);
   const [isOpenLogin, setIsOpenLogin] = useState(false);
   useEffect(() => {
     if (!auth.token) {
       fetch("http://localhost:5050/")
         .then((res) => res.text())
-        .then((res) => setMessage(res));
-    }
-    else{
-      getUser(auth.token).then(data => {
-        setMessage(`Hello, ${data.data.user.first_name}!`)
-      })
-      
+        .then((res) => {
+          setMessage(res);
+          
+        });
+        setLoading(false)
+    } else {
+      getUser(auth.token).then((data) => {
+        setMessage(`Hello, ${data.data.user.first_name}!`);
+      });
+      setLoading(false)
     }
   });
   const logOut = () => {
-    auth.removeToken()
-  }
+    auth.removeToken();
+    setSuccessMsg(true);
+  };
   const openRegModal = () => setIsOpenReg(true);
   const closeRegModal = () => setIsOpenReg(false);
   const openLoginModal = () => setIsOpenLogin(true);
@@ -43,7 +49,15 @@ const HomePage = (props) => {
         </div>
         {!auth.token && (
           <div className="m-3 p-5 bd-highlight align-self-center flex-grow-2 hello-block">
-            <h1>{message}</h1>
+            {successMsg && (
+              <div className="alert alert-success" role="alert">
+                Logged Out Successfully
+              </div>
+            )}
+
+            <h1>
+              {message}{" "}              
+            </h1>
             <div>
               First time here? <br />
               <button
@@ -68,6 +82,11 @@ const HomePage = (props) => {
         )}
         {auth.token && (
           <div className="m-3 p-5 bd-highlight align-self-center flex-grow-2 hello-block">
+            {loading && (
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
             <h1>{message}</h1>
             <div>
               <button

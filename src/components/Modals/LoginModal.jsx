@@ -1,5 +1,4 @@
 import { Modal } from "react-bootstrap";
-import { useFormik } from "formik";
 import LoginForm from "./LoginForm"
 
  function LoginModal(props){

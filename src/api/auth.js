@@ -16,8 +16,6 @@ export async function login(email, password) {
   const response = await axios.post(`${baseUrl}/users/login`, {
     email, password
   });
-
-  console.log(response.data)
   return response.data;
 }
 
