@@ -1,10 +1,11 @@
 import axios from "axios";
-const baseUrl = "http://localhost:5050";
+const baseUrl = "https://my-best-friend-alinanovof.herokuapp.com";
 
-export async function signup(email, password, first_name, last_name, tel) {
+export async function signup(email, password, passwordConfirmation, first_name, last_name, tel) {
   const response = await axios.post(baseUrl + `/users`, {
     email,
     password,
+    passwordConfirmation,
     first_name,
     last_name,
     tel,

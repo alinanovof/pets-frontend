@@ -1,19 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getUser } from "../api/api";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const Navbar = () => {
   const auth = useAuth();
-  const [admin, setAdmin] = useState(false);
-  useEffect(() => {
-    getUser(auth.token).then((data) => {
-      if (data.data.user.role === "admin") {
-        setAdmin(true);
-      } else if (!auth.token || data.data.user.role !== "admin") {
-        setAdmin(false);
-      }
-    });
+  const [userId, setUserId] = useState()
+  getUser(auth.token).then((data) => {
+    const userId = data.user.id;
+    setUserId(userId)
   });
   return (
     <nav className="navbar navbar-expand-lg justify-content-center">
@@ -31,7 +26,7 @@ const Navbar = () => {
         <NavLink
           className="navbar-link"
           activeStyle={{ fontWeight: "bold" }}
-          to="/profile"
+          to={`/profile/${userId}`}
         >
           <i className="bi bi-person"></i>
           <span className="nav-text">Profile</span>
@@ -55,7 +50,7 @@ const Navbar = () => {
         <i className="bi bi-search"></i>
         <span className="nav-text">Search</span>
       </NavLink>
-      {auth.token && admin && (
+      {auth.token && auth.admin && (
         <NavLink
           className="navbar-link"
           activeStyle={{ fontWeight: "bold" }}

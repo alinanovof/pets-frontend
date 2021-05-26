@@ -24,7 +24,7 @@ function LoginForm(props) {
       await auth.saveToken(token)
       props.hideModal();
     } catch (err) {
-      setErrorMsg(err.message);
+      setErrorMsg(err.response.data);
     }
   };
   return (

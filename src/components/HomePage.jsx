@@ -14,7 +14,7 @@ const HomePage = (props) => {
   const [isOpenLogin, setIsOpenLogin] = useState(false);
   useEffect(() => {
     if (!auth.token) {
-      fetch("http://localhost:5050/")
+      fetch("https://my-best-friend-alinanovof.herokuapp.com/")
         .then((res) => res.text())
         .then((res) => {
           setMessage(res);
@@ -23,11 +23,11 @@ const HomePage = (props) => {
         setLoading(false)
     } else {
       getUser(auth.token).then((data) => {
-        setMessage(`Hello, ${data.data.user.first_name}!`);
+        setMessage(`Hello, ${data.user.first_name}!`);
       });
       setLoading(false)
     }
-  });
+  }, [auth.token]);
   const logOut = () => {
     auth.removeToken();
     setSuccessMsg(true);
@@ -39,24 +39,24 @@ const HomePage = (props) => {
 
   return (
     <div className="page-wrapper text-center">
-      <div className="d-flex p-2 bd-highlight justify-content-center home-upper-flex">
-        <div className="p-2 bd-highlight">
+      <div className="d-flex bd-highlight justify-content-center home-upper-flex">
+        <div className="bd-highlight">
           <img
             className="dog-pic-home"
             src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
             alt="a dog"
           ></img>
         </div>
-        {!auth.token && (
-          <div className="m-3 p-5 bd-highlight align-self-center flex-grow-2 hello-block">
-            {successMsg && (
-              <div className="alert alert-success" role="alert">
-                Logged Out Successfully
+        {loading && (
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
               </div>
             )}
-
+        {(!loading && !auth.token) && (
+          <>
+          <div className="m-3 p-5 bd-highlight align-self-center flex-grow-2 hello-block">
             <h1>
-              {message}{" "}              
+              Welcome, guest!              
             </h1>
             <div>
               First time here? <br />
@@ -77,31 +77,43 @@ const HomePage = (props) => {
               >
                 Login
               </button>
+              {successMsg && (
+              <div className="alert alert-success m-3" role="alert">
+                Logged Out Successfully
+              </div>
+            )}
             </div>
           </div>
+          </>
+          
         )}
         {auth.token && (
-          <div className="m-3 p-5 bd-highlight align-self-center flex-grow-2 hello-block">
+          <div className="m-3 p-5 bd-highlight align-self-center hello-block">
             {loading && (
               <div className="spinner-border" role="status">
                 <span className="visually-hidden">Loading...</span>
               </div>
             )}
-            <h1>{message}</h1>
-            <div>
-              <button
-                type="button"
-                className="btn btn-primary signup-btn btn-sm mb-3"
-                onClick={logOut}
-              >
-                Log Out
-              </button>
-            </div>
+            {!loading && (
+              <>
+              <h1>{message}</h1>
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-primary signup-btn btn-sm mb-3"
+                  onClick={logOut}
+                >
+                  Log Out
+                </button>
+              </div>
+              </>
+            )}
+            
           </div>
         )}
       </div>
-      <div className="container about-container d-flex p-3">
-        <div className=" p-2 bd-highlight">
+      <div className="container about-container d-flex p-2 mt-2">
+        <div className=" p-1 bd-highlight">
           <h2>Who are we?</h2>
           <br />
           We are pet adoption center My Best Friend. All in our name: our main
@@ -111,7 +123,7 @@ const HomePage = (props) => {
           <br />
           You can adopt or foster a pet on our website.
           <br />
-          <Link className="btn btn-primary mt-2" to="/search">
+          <Link className="btn btn-primary mt-1" to="/search">
             Search Pets
           </Link>
         </div>

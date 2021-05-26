@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,6 +16,7 @@ import AddPet from "./components/Admin/AddPet";
 import AuthProvider, { useAuth } from "./context/AuthContext";
 import AdminDash from "./components/Admin/AdminDash";
 import AllPets from "./components/Admin/AllPets";
+import AllUsers from "./components/Admin/AllUsers";
 
 function PrivateRoute({ children, ...rest }) {
   let auth = useAuth();
@@ -24,6 +25,27 @@ function PrivateRoute({ children, ...rest }) {
       {...rest}
       render={({ location }) =>
         auth.token ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+function AdminRoute({ children, ...rest }) {
+  let auth = useAuth();
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        auth.token && auth.admin ? (
           children
         ) : (
           <Redirect
@@ -47,7 +69,7 @@ const AppRouter = () => {
     <Router>
       <Navbar />
       <Switch>
-        <PrivateRoute path="/profile">
+        <PrivateRoute path="/profile/:userId">
           <ProfilePage />
         </PrivateRoute>
         <PrivateRoute path="/my-pets/:petId">
@@ -59,15 +81,18 @@ const AppRouter = () => {
         <Route path="/search">
           <Search />
         </Route>
-        <Route path="/admin/add-pet">
+        <AdminRoute path="/admin/all-users">
+          <AllUsers />
+        </AdminRoute>
+        <AdminRoute path="/admin/add-pet">
           <AddPet />
-        </Route>
-        <Route path="/admin/all-pets">
+        </AdminRoute>
+        <AdminRoute path="/admin/all-pets">
           <AllPets />
-        </Route>
-        <PrivateRoute path="/admin">
+        </AdminRoute>
+        <AdminRoute path="/admin">
           <AdminDash />
-        </PrivateRoute>
+        </AdminRoute>
         <Route exact path="/">
           <HomePage />
         </Route>

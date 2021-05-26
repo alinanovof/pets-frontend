@@ -1,62 +1,95 @@
-import { DragSwitch } from "react-dragswitch";
+// import { DragSwitch } from "react-dragswitch";
 import "react-dragswitch/dist/index.css";
-import React, { useState } from "react";
-import AdvancedSearch from './AdvancedSearch'
-import { DropdownButton } from "react-bootstrap";
-import Dropdown from "react-bootstrap/Dropdown";
-import SearchResults from './SearchResults'
+import React, { useState, useEffect } from "react";
+// import AdvancedSearch from "./AdvancedSearch";
+import { Formik, Field, Form } from "formik";
+import SearchResults from "./SearchResults";
+import { getSearch } from "../../api/api";
+import { useAuth } from "../../context/AuthContext";
+import { withRouter } from "react-router-dom";
 
 const Search = () => {
-  const [checked, setChecked] = useState(false);
-  const [results, setResults] = useState(false);
-  
+  // const [checked, setChecked] = useState(false);
+  const [results, setResults] = useState();
+  const [loading, setLoading] = useState(false);
+  const auth = useAuth();
+  useEffect(() => {
+    setResults(results);
+  }, [results]);
 
-  return (
-    <div className="page-wrapper">
-      <div className="input-group search-input">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search Pets..."
-          aria-label="Search"
-          aria-describedby="search"
-        />
-      </div>
-      <div className="m-3">
-        Basic Search{" "}
-        <DragSwitch
-          onColor="#dfb89c"
-          handleColor="#B45008"
-          checked={checked}
-          onChange={(e) => {
-            setChecked(e);
-          }}
-        />{" "}
-        Advanced Search
-      </div>
-      <div className="search-results"></div>
-      <div className="pet-type row mb-3">
-            <h3 className="mt-1 col-sm-2">Type of a pet</h3>
-            <DropdownButton
-              className="mt-1 col-sm-3"
-              id="dropdown-basic-button"
-              title="Choose..."
-            >
-              <Dropdown.Item href="#/action-1">Dog</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Cat</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Horse</Dropdown.Item>
-              <Dropdown.Item href="#/action-4">Other</Dropdown.Item>
-            </DropdownButton>
-          </div>
-      <AdvancedSearch checked={checked}/>
-      <button className="btn btn-primary search-btn" onClick={(e) => {
-            setResults(e);
-          }}>Search</button>
-          {results &&
-          <SearchResults results={results}/>
-}
+  if (!auth.isInitiallyLoaded) {
+    return <div class="d-flex justify-content-center mt-3">
+    <div className="spinner-border" role="status">
+      <span className="visually-hidden">Loading...</span>
     </div>
+  </div>;
+  }
+  return (
+    <Formik
+      enableReinitialize={true}
+      initialValues={{
+        search: "",
+        petType: "",
+      }}
+      onSubmit={async (values) => {
+        setLoading(true)
+        const data = await getSearch(values.petType, auth.token);
+        setResults(data.pets);
+        setLoading(false)
+      }}
+    >
+      <div className="page-wrapper">
+      <h2>Search</h2>
+      
+        {/* <div className="m-3">
+          Basic Search{" "}
+          <DragSwitch
+            onColor="#dfb89c"
+            handleColor="#B45008"
+            checked={checked}
+            onChange={(e) => {
+              setChecked(e);
+            }}
+          />{" "}
+          Advanced Search
+        </div> */}
+
+        <Form className="row g-2 card-back mt-2">
+     
+            <Field
+              className="form-select"
+              id="petType"
+              name="petType"
+              as="select"
+              required
+            >
+              <option default value="">
+                Choose pet's type
+              </option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Horse">Horse</option>
+              <option value="Other">Other</option>
+            </Field>
+
+          {/* <AdvancedSearch checked={checked} /> */}
+          
+          <button className="btn btn-primary" type="submit">
+            Search
+          </button>
+            
+        </Form>
+        {loading && (
+        <div class="d-flex justify-content-center mt-3">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
+        {(!loading && results) && <SearchResults results={results} />}
+      </div>
+    </Formik>
   );
 };
 
-export default Search;
+export default withRouter(Search);
